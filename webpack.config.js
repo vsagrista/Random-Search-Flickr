@@ -2,7 +2,8 @@ module.exports = {
   entry: ["./app/components/Main.js",
           "./CSS/style.css"],
   output: {
-    filename: "public/bundle.js"
+        publicPath: 'http://localhost:3000/',
+        filename: 'build/bundle.js'
   },
   module: {
     loaders: [
