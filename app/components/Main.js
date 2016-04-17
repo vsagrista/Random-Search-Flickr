@@ -23,6 +23,7 @@ var Spinner = React.createClass({
 	render: function () {
 		return (
 			<div class="mini-loader-content">
+			<h2>Loading...</h2>
 			  <svg id="mini-loader" xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 500.00001 500.00001">
 			    <g>
 			      <path id="b0" d="M66.734 66.734v366.533h366.532V66.734H66.734zm15 15h336.532v336.533H81.734V81.734z">
