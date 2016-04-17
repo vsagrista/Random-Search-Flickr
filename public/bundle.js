@@ -51,101 +51,46 @@
 
 	var flickrUrl = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=89d5a9ac35a66a4e8fd31d57704df3ce&format=json&nojsoncallback=1&text=barcelona skyline&extras=url_o';
 
-	var data = [{ id: 1, author: "Pete Hunt", text: "This is one comment" }, { id: 2, author: "Jordan Walke", text: "This is *another* comment" }];
+	var CityPictures = React.createClass({
+			displayName: 'CityPictures',
 
-	var CommentList = React.createClass({
-	  displayName: 'CommentList',
+			getInitialState: function getInitialState() {
+					return { cities: 'loading...' };
+			},
+			componentDidMount: function componentDidMount() {
+					$.ajax({
+							url: flickrUrl,
+							processData: false,
+							success: function (data) {
+									this.setState({ cities: data });
+							}.bind(this),
+							error: function (xhr, status, err) {
+									console.error(this.props.url, status, err.toString());
+							}.bind(this)
+					});
+			},
 
-	  render: function render() {
-	    var commentNodes = this.props.data.map(function (comment) {
-	      return React.createElement(
-	        Comment,
-	        { author: comment.author, key: comment.id },
-	        comment.text
-	      );
-	    });
-	    return React.createElement(
-	      'div',
-	      { className: 'commentList' },
-	      commentNodes
-	    );
-	  }
+			render: function render() {
+					if (!this.state.cities) return React.createElement(
+							'div',
+							null,
+							'Loading ...'
+					);else {
+							if (this.state.cities.photos !== undefined) return React.createElement(
+									'div',
+									null,
+									this.state.cities.photos.photo[0].url_o.toString()
+							);
+							return React.createElement(
+									'div',
+									null,
+									'Loading ...'
+							);
+					}
+			}
 	});
 
-	var CommentForm = React.createClass({
-	  displayName: 'CommentForm',
-
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'commentForm' },
-	      'Hello, world! I am a CommentForm.'
-	    );
-	  }
-	});
-
-	var Comment = React.createClass({
-	  displayName: 'Comment',
-
-	  rawMarkup: function rawMarkup() {
-	    var rawMarkup = marked(this.props.children.toString(), { sanitize: true });
-	    return { __html: rawMarkup };
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'comment' },
-	      React.createElement(
-	        'h2',
-	        { className: 'commentAuthor' },
-	        this.props.author
-	      ),
-	      React.createElement('span', { dangerouslySetInnerHTML: this.rawMarkup() })
-	    );
-	  }
-	});
-
-	var CommentBox = React.createClass({
-	  displayName: 'CommentBox',
-
-	  loadCitiesFromServer: function loadCitiesFromServer() {
-	    console.log('triggerd');
-	    $.ajax({
-	      url: flickrUrl,
-	      processData: false,
-	      success: function (data) {
-	        this.setState({ data: data });
-	        //console.log('data: ', data)
-	      }.bind(this),
-	      error: function (xhr, status, err) {
-	        console.error(this.props.url, status, err.toString());
-	      }.bind(this)
-	    });
-	  },
-	  getInitialState: function getInitialState() {
-	    return { data: [] };
-	  },
-	  componentDidMount: function componentDidMount() {
-	    this.getInitialState();
-	    this.loadCitiesFromServer();
-	    console.log('data: ', data);
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'container' },
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Comments'
-	      ),
-	      React.createElement(CommentList, { data: this.props.data }),
-	      React.createElement(CommentForm, null)
-	    );
-	  }
-	});
-
-	ReactDOM.render(React.createElement(CommentBox, { data: data }), document.getElementById('app'));
+	ReactDOM.render(React.createElement(CityPictures, null), document.getElementById('app'));
 
 /***/ },
 /* 1 */
