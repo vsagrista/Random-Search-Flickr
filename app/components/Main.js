@@ -1,8 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom')
 var _ = require('underscore-node');
-
-var flickrUrl = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=89d5a9ac35a66a4e8fd31d57704df3ce&format=json&nojsoncallback=1&text=New York skyline&extras=url_o'
+var flickrUrl
 
 function getSample(array) {
 	var url = _.sample(array).url_o
@@ -23,7 +22,7 @@ var RunSlideShow = React.createClass({
 		 if( !this.state.showSearchBar) return (
         <div>
   		    <img src={url} alt="Somewhere in Barcelona" className="text-center img-responsive"/>
-          <button className="refresh-button" onClick={this.onClick} type="submit">x</button>
+          <button className="refresh-button btn btn-info" onClick={this.onClick} type="submit">New Search</button>
         </div>
 	  )
     return (
@@ -61,34 +60,39 @@ var SearchForm = React.createClass({
     return { showSearchBar: true };
   },
   onClick: function(e) {
-    e.preventDefault()
-    this.setState({ showSearchBar: false });
+    e.preventDefault();
+    if (document.getElementById('city-name').value) {
+      this.setState({ showSearchBar: false });
+      flickrUrl = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=89d5a9ac35a66a4e8fd31d57704df3ce&format=json&nojsoncallback=1&text=' + document.getElementById('city-name').value + '&extras=url_o';
+    }
+    else {
+      alert('Please, search for something!');
+    }
   },
   render: function () {
     if( this.state.showSearchBar) return (
       <form role="search">
-        <label>Pick a city</label>
+        <label>Search on Flickr (E.g. New York Skyline)</label>
         <div className="form-group">
           <input name="city" id="city-name" type="text" className="form-control" placeholder="Search"/>
           <button id="city" onClick={this.onClick} type="submit" className="btn btn-success form-control">Submit</button>
         </div>
       </form>
     )
-      return (<CityPictures /> )
+      return (<DisplaySeach /> )
   }
 })
 
-
-var CityPictures = React.createClass({
+var DisplaySeach = React.createClass({
 	getInitialState: function () {
-		return {cities: 'loading...' };
+		return {search: 'loading...' };
 	},
 	componentDidMount: function () {
 	    $.ajax({
 	      url: flickrUrl,
 	      processData: false,
 	      success: function(data) {
-          this.setState({cities: data});
+          this.setState({search: data});
       }.bind(this),
 	      error: function(xhr, status, err) {
 	        console.error(this.props.url, status, err.toString());
@@ -96,9 +100,9 @@ var CityPictures = React.createClass({
 	 		});
 	},
 	render: function() {
-    if (!this.state.cities) return <div>Loading ...</div>;
+    if (!this.state.search) return <div>Loading ...</div>;
     else {
-    	var pictures = this.state.cities.photos;
+    	var pictures = this.state.search.photos;
     	if (pictures !== undefined) {
     		return (
     			<RunSlideShow  pictures={pictures}  />
