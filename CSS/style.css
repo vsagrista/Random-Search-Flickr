@@ -4,19 +4,30 @@ html, body {
   background: repeating-linear-gradient(-45deg, tomato, tomato 5px, white 5px, white 10px);
 }
 
-
-
 h2 {
   text-align: center;
   font-style: normal;
   font-variant: normal;
   font-weight: normal;
   font-stretch: normal;
-  font-size: 20px;
+  font-size: 30px;
   line-height: normal;
   font-family: Sofia, serif;
 }
 
+form {
+  background: blanchedalmond;
+  width: 350px;
+  padding: 15px;
+  text-align: center;
+  border: 3px dotted black;
+}
+
+label {
+  display: block;
+  font-family: monospace;
+  font-size: 25px;
+}
 
 .app-wrapper {
   width: 100%;
@@ -60,23 +71,30 @@ svg#mini-loader {
   animation: b4 4s infinite ease;
 }
 
+.refresh-button {
+  z-index: 1;
+  position: absolute;
+  top:0;
+  left: 0;
+}
+
 @keyframes b0 {
   0% {
     transform: rotate(0);
   }
-  
+
   25% {
     transform: rotate(-90deg);
   }
-  
+
   50% {
     transform: rotate(-180deg);
   }
-  
+
   75% {
     transform: rotate(-270deg);
   }
-  
+
   100% {
     transform: rotate(-360deg);
   }
@@ -86,19 +104,19 @@ svg#mini-loader {
   0% {
     transform: translate(0, 0);
   }
-  
+
   25% {
     transform: translate(0, 355px);
   }
-  
+
   50% {
     transform: translate(355px, 355px);
   }
-  
+
   75% {
     transform: translate(355px, 0);
   }
-  
+
   100% {
     transform: translate(0, 0);
   }
@@ -108,19 +126,19 @@ svg#mini-loader {
   0% {
     transform: translate(0, 0);
   }
-  
+
   25% {
     transform: translate(-355px, 0);
   }
-  
+
   50% {
     transform: translate(-355px, 355px);
   }
-  
+
   75% {
     transform: translate(0, 355px);
   }
-  
+
   100% {
     transform: translate(0, 0);
   }
@@ -130,19 +148,19 @@ svg#mini-loader {
   0% {
     transform: translate(0, 0);
   }
-  
+
   25% {
     transform: translate(0, -355px);
   }
-  
+
   50% {
     transform: translate(-355px, -355px);
   }
-  
+
   75% {
     transform: translate(-355px, 0);
   }
-  
+
   100% {
     transform: translate(0, 0);
   }
@@ -152,19 +170,19 @@ svg#mini-loader {
   0% {
     transform: translate(0, 0);
   }
-  
+
   25% {
     transform: translate(355px, 0);
   }
-  
+
   50% {
     transform: translate(355px, -355px);
   }
-  
+
   75% {
     transform: translate(0, -355px);
   }
-  
+
   100% {
     transform: translate(0, 0);
   }
