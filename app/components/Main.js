@@ -2,7 +2,6 @@ var React = require('react');
 var ReactDOM = require('react-dom')
 var _ = require('underscore-node');
 var flickrUrl, openWeatherUrl;
-var urls = [];
 var formHTML = function() {
   return (
     <form role="search">
@@ -44,6 +43,25 @@ var imgLoadedHTML = function() {
   )
 }
 
+var weatherLoadedHTML = function() {
+  return (
+    <div className ='container weather-info-div' id="weather-info">
+      <ul id="weather-ul"></ul>
+    </div>
+  )
+}
+
+var Spinner = React.createClass({
+  render: function () {
+    return spinnerHTML.bind(this)();
+  }
+})
+
+var WeatherInfo = React.createClass({
+  render: function () {
+    return weatherLoadedHTML.bind(this)();
+  }
+})
 
 var SearchForm = React.createClass({
   getInitialState: function() {
@@ -59,7 +77,12 @@ var SearchForm = React.createClass({
   },
   render: function () {
     if( this.state.showSearchBar) return formHTML.bind(this)();
-    return (<RunSearch /> )
+    return ( 
+      <div className="conent-wrapper">
+        <WeatherInfo />
+        <RunSearch /> 
+      </div>
+            )
   }
 })
 
@@ -68,26 +91,23 @@ var RunSearch = React.createClass({
 		return {search: 'loading...' };
 	},
 	componentDidMount: function () {
-    urls.push(flickrUrl);
-    urls.push(openWeatherUrl); 
-	  ajaxRequest.bind(this, urls[0], 'img')();
-    return ajaxRequest.bind(this, urls[1], 'weather')();
+	  ajaxRequest.bind(this, flickrUrl, 'img')();
+    return ajaxRequest.bind(this, openWeatherUrl, 'weather')();
 	},
 	render: function() {
     if (!this.state.search) return <div>Loading ...</div>;
     else {
     	var pictures = this.state.search.photos;
     	if (pictures !== undefined) {
-    		return ( <DisplayPicture  pictures={pictures}  /> );
+    		return (
+          <div className="conent-wrapper">
+            <WeatherInfo />
+            <DisplayPicture  pictures={pictures}  /> 
+          </div>
+          );
     	}
     return <Spinner />;
   	}
-  }
-})
-
-var Spinner = React.createClass({
-  render: function () {
-    return spinnerHTML.bind(this)();
   }
 })
 
@@ -101,19 +121,13 @@ var DisplayPicture = React.createClass({
   },
   render: function () {
     var url = getSampleFromArray(this.props.pictures.photo)
-    if( !this.state.showSearchBar) return imgLoadedHTML.bind(this)();
+    if( !this.state.showSearchBar) return imgLoadedHTML.bind(this)();// weatherLoadedHTML.bind(this)();
+    $('li').empty();
     return (
       <SearchForm />
     )
   }
 })
-
-// var runRequests = function(urls) {
-//   urls.forEach(function(url){
-//     console.log(url)
-//     return ajaxRequest(url)
-//   })
-// }
 
 var ajaxRequest = function(url, option) {
   $.ajax({
@@ -138,20 +152,18 @@ function getSampleFromArray(array) {
 function getWeatherInfo(response) {
   var infoAtNoon = response.list.filter(function(obj){ return obj['dt_txt'].indexOf('12:00') > -1 });
   weatherEachDay(infoAtNoon);
-  temperatureEachDay(infoAtNoon); 
+  temperatureEachDay(infoAtNoon);
 }
 
 function weatherEachDay(infoAtNoon) {
   var weatherNextFiveDays = infoAtNoon.filter(function(obj){return obj['weather'][0].description});
   weatherNextFiveDays.forEach(function(obj) {
-    console.log(obj['weather'][0].description);
-    // do something in the DOM
+     $('#weather-ul').append('<li>'+obj['weather'][0].description+'</li>');
   })
 }
 
 function temperatureEachDay(infoAtNoon) {
   infoAtNoon.forEach(function(obj) {
-    console.log(obj.main.temp);
     // do something in the DOM
   })
 }
