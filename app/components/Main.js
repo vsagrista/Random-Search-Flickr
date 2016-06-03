@@ -2,6 +2,19 @@ var React = require('react');
 var ReactDOM = require('react-dom')
 var _ = require('underscore-node');
 var flickrUrl, openWeatherUrl;
+var weatherObj = {
+    'clear sky':'sunny',
+    'few clouds':'cloudy',
+    'overcast': 'cloudy',
+    'few clouds': 'cloudy',
+    'broken cloud':'cloudy',
+    'sky rain': 'rainy',
+    'moderate rain':'rainy',
+    'light rain':'rainy',
+    'scattered clouds': 'cloudy',
+    'broken clouds': 'clouds'
+  }
+import img from '../../img/sun.png'
 var formHTML = function() {
   return (
     <form role="search">
@@ -11,6 +24,7 @@ var formHTML = function() {
           <button id="city" onClick={this.onClick} type="submit" className="btn btn-success form-control">Submit</button>
        </div>
     </form>
+    </div>
   )
 }
 var spinnerHTML = function() {
@@ -151,6 +165,7 @@ function getSampleFromArray(array) {
 
 function getWeatherInfo(response) {
   var infoAtNoon = response.list.filter(function(obj){ return obj['dt_txt'].indexOf('12:00') > -1 });
+  //$('#weather-ul').append("<div class='container weather-div'><div class='sunny'></div><div class='cloudy'></div><div class='rainy'></div><div class='snowy'></div><div class='rainbow'></div><div class='starry'></div><div class='stormy'></div></div>")
   weatherEachDay(infoAtNoon);
   temperatureEachDay(infoAtNoon);
 }
@@ -158,8 +173,12 @@ function getWeatherInfo(response) {
 function weatherEachDay(infoAtNoon) {
   var weatherNextFiveDays = infoAtNoon.filter(function(obj){return obj['weather'][0].description});
   weatherNextFiveDays.forEach(function(obj) {
-     $('#weather-ul').append('<li>'+obj['weather'][0].description+'</li>');
+     $('#weather-info').append('<li><img src="../img/sun.png>" '+getWeatherClass(obj['weather'][0].description)+'</li>');
   })
+}
+
+function getWeatherClass(apiResponse) {
+  for (var key in weatherObj) if(key === apiResponse) return weatherObj[key]; 
 }
 
 function temperatureEachDay(infoAtNoon) {

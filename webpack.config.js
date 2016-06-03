@@ -1,6 +1,6 @@
 module.exports = {
   entry: ["./app/components/Main.js",
-          "./CSS/style.css"],
+          "./CSS/style.css", "./img/sun.png"],
   output: {
         publicPath: 'http://localhost:3000/',
         filename: 'build/bundle.js'
@@ -15,7 +15,11 @@ module.exports = {
           presets: ['react', 'es2015']
         }
       },
-      { test: /\.css$/, loader: "style-loader!css-loader" }
+      { test: /\.css$/, loader: "style-loader!css-loader" },
+      {
+        test: /\.(jpg|png)$/,
+        loader: 'url?limit=25000'
+      }
     ]
   }
 }
