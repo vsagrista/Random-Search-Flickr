@@ -1,6 +1,7 @@
+//require('./img/sun.png');
 module.exports = {
   entry: ["./app/components/Main.js",
-          "./CSS/style.css", "./img/sun.png"],
+          "./CSS/style.css"],
   output: {
         publicPath: 'http://localhost:3000/',
         filename: 'build/bundle.js'
@@ -18,7 +19,7 @@ module.exports = {
       { test: /\.css$/, loader: "style-loader!css-loader" },
       {
         test: /\.(jpg|png)$/,
-        loader: 'url?limit=25000'
+        loader: 'url?limit=25000' 
       }
     ]
   }

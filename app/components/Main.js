@@ -5,25 +5,29 @@ var flickrUrl, openWeatherUrl;
 var weatherObj = {
     'clear sky':'sunny',
     'few clouds':'cloudy',
+    'clouds': 'cloudy',
     'overcast': 'cloudy',
     'few clouds': 'cloudy',
-    'broken cloud':'cloudy',
+    'broken clouds':'cloudy',
     'sky rain': 'rainy',
     'moderate rain':'rainy',
     'light rain':'rainy',
     'scattered clouds': 'cloudy',
-    'broken clouds': 'clouds'
+    'broken clouds': 'cloudy',
+    'overcast clouds':'cloudy',
+    'heavy intensity rain': 'rainy'
   }
-import img from '../../img/sun.png'
+
 var formHTML = function() {
   return (
-    <form role="search">
-       <label>Search on Flickr (E.g. New York Skyline)</label>
-       <div className="form-group">
-          <input name="city" id="city-name" type="text" className="form-control" placeholder="Search"/>
-          <button id="city" onClick={this.onClick} type="submit" className="btn btn-success form-control">Submit</button>
-       </div>
-    </form>
+    <div>
+      <form role="search">
+         <label>Search on Flickr (E.g. New York Skyline)</label>
+         <div className="form-group">
+            <input name="city" id="city-name" type="text" className="form-control" placeholder="Search"/>
+            <button id="city" onClick={this.onClick} type="submit" className="btn btn-success form-control">Submit</button>
+         </div>
+      </form>
     </div>
   )
 }
@@ -163,9 +167,15 @@ function getSampleFromArray(array) {
   return getSampleFromArray(array);
 }
 
+function getImgUrl(weather) {
+  for (var prop in weatherObj) { 
+    if (prop === weather) return '../../img/' + weatherObj[prop] + '.png';
+  }
+  return '../../img/sunny.png';
+}
+
 function getWeatherInfo(response) {
   var infoAtNoon = response.list.filter(function(obj){ return obj['dt_txt'].indexOf('12:00') > -1 });
-  //$('#weather-ul').append("<div class='container weather-div'><div class='sunny'></div><div class='cloudy'></div><div class='rainy'></div><div class='snowy'></div><div class='rainbow'></div><div class='starry'></div><div class='stormy'></div></div>")
   weatherEachDay(infoAtNoon);
   temperatureEachDay(infoAtNoon);
 }
@@ -173,7 +183,7 @@ function getWeatherInfo(response) {
 function weatherEachDay(infoAtNoon) {
   var weatherNextFiveDays = infoAtNoon.filter(function(obj){return obj['weather'][0].description});
   weatherNextFiveDays.forEach(function(obj) {
-     $('#weather-info').append('<li><img src="../img/sun.png>" '+getWeatherClass(obj['weather'][0].description)+'</li>');
+    $('#weather-ul').append('<li><img src=' + getImgUrl(obj['weather'][0].description) + '/></li>');   
   })
 }
 
